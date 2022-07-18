@@ -1,5 +1,5 @@
 executable              = hlt_efficiency.sh
-arguments               = filelist.py.$(Process)
+arguments               = file_lists/filelist.py.$(Process)
 
 request_disk            = 25000
 
@@ -13,9 +13,9 @@ x509userproxy           = /afs/cern.ch/user/n/ntrevisa/x509up_u136629
 
 should_transfer_files   = YES
 when_to_transfer_output = ON_EXIT
-transfer_input_files    = filelist.py.$(Process)
+transfer_input_files    = file_lists/filelist.py.$(Process)
 
 # submit 359 instances of this job
 # with the splitting scheme we are using, we have
 # 359 filelist.py.XXX files
-queue 359
+queue 2

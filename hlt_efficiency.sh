@@ -1,25 +1,32 @@
 #!/bin/bash
-#export X509_USER_PROXY=/afs/cern.ch/user/n/ntrevisa/.proxy
-#voms-proxy-info
-echo "Input 1:"
-echo $1
-scp -r /afs/cern.ch/user/n/ntrevisa/work/HLT_DQM/CMSSW_12_4_0/ .
+# Check input and where we are
+echo "Input 1:" $1
+echo $PWD
+mkdir -p workspace
+# Sources
+cd /afs/cern.ch/user/n/ntrevisa/work/HLT_DQM/CMSSW_12_4_0/src/HLT-DQM-HTCondor/
 source /cvmfs/cms.cern.ch/cmsset_default.sh
-mv $1 CMSSW_12_4_0/src/filelist.py
-cd CMSSW_12_4_0/src
 eval `scramv1 runtime -sh`
+cd -
+scp /afs/cern.ch/user/n/ntrevisa/work/HLT_DQM/CMSSW_12_4_0/src/HLT-DQM-HTCondor/$1 ./filelist.py
+ls -lrt
+# Step0
 echo "cmsRun step0_L1REPACK_RAW2DIGI.py"
+echo $PWD
+scp /afs/cern.ch/user/n/ntrevisa/work/HLT_DQM/CMSSW_12_4_0/src/HLT-DQM-HTCondor/step0_L1REPACK_RAW2DIGI.py .
 cmsRun step0_L1REPACK_RAW2DIGI.py
+# Step1
 echo "cmsRun step1_HLT.py"
+echo $PWD
+scp /afs/cern.ch/user/n/ntrevisa/work/HLT_DQM/CMSSW_12_4_0/src/HLT-DQM-HTCondor/step1_HLT.py .
 cmsRun step1_HLT.py
-rm step0_L1REPACK_RAW2DIGI.root
+rm workspace/step0_L1REPACK_RAW2DIGI.root
+# Step2
 echo "cmsRun step2_RAW2DIGI_L1Reco_RECO_DQM.py"
+echo $PWD
+scp /afs/cern.ch/user/n/ntrevisa/work/HLT_DQM/CMSSW_12_4_0/src/HLT-DQM-HTCondor/step2_RAW2DIGI_L1Reco_RECO_DQM.py .
 cmsRun step2_RAW2DIGI_L1Reco_RECO_DQM.py
-rm step1_HLT.root
-# echo "cmsRun step3_HARVESTING.py"
-# cmsRun step3_HARVESTING.py
-# rm step2_RAW2DIGI_L1Reco_RECO_DQM.root
-# echo "Moving output to eos"
-# mv DQM_V0001_R000323755__Global__CMSSW_X_Y_Z__RECO.root /eos/user/n/ntrevisa/DQM_HLT/DQM_V0001_R000323755__Global__CMSSW_X_Y_Z__RECO.root.$1
-mv step2_RAW2DIGI_L1Reco_RECO_DQM.root /eos/user/n/ntrevisa/DQM_HLT/step2_RAW2DIGI_L1Reco_RECO_DQM_$1.root
-echo $1
+rm workspace/step1_HLT.root
+# Finish
+mv workspace/step2_RAW2DIGI_L1Reco_RECO_DQM.root /eos/user/n/ntrevisa/DQM_HLT/step2_RAW2DIGI_L1Reco_RECO_DQM_${1/\//_}.root
+echo ${1/\//_}
