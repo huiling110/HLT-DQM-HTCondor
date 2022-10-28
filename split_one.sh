@@ -1,5 +1,5 @@
 #!/bin/bash
-input="list"
+input=$1
 i=0
 while IFS= read -r line
 do
