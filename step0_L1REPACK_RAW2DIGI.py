@@ -7,7 +7,7 @@ import FWCore.ParameterSet.Config as cms
 
 from Configuration.Eras.Era_Run2_2018_cff import Run2_2018
 
-from filelist import *
+# from filelist import *
 
 process = cms.Process('RAW2DIGI',Run2_2018)
 
@@ -24,16 +24,16 @@ process.load('Configuration.StandardSequences.EndOfProcess_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 
 process.maxEvents = cms.untracked.PSet(
-    # input = cms.untracked.int32(-1),
-    input = cms.untracked.int32(10),
+    input = cms.untracked.int32(-1),
+    # input = cms.untracked.int32(10),
     output = cms.optional.untracked.allowed(cms.int32,cms.PSet)
 )
 
 # Input source
 process.source = cms.Source("PoolSource",
     dropDescendantsOfDroppedBranches = cms.untracked.bool(False),
-    # fileNames = cms.untracked.vstring('/store/data/Run2018D/EphemeralZeroBias1/RAW/v1/000/323/755/00000/08D7B1A7-B8C5-0944-9A69-B698A2BF52EB.root'),
-    fileNames = cms.untracked.vstring(filelist),
+    fileNames = cms.untracked.vstring('/store/data/Run2022C/Muon/RAW/v1/000/357/080/00000/96a8a90c-060f-4522-86af-0746c2b580c2.root'),
+    # fileNames = cms.untracked.vstring(filelist),
     inputCommands = cms.untracked.vstring(
         'keep *',
         'drop Run3Scouting*_hltScouting*Packer__HLT'
