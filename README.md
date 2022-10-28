@@ -1,5 +1,9 @@
 # HT Condor tools for HLT DQM 
 
+Get the list of files:
+
+    dasgoclient --query="file dataset=/Muon/Run2022C-v1/RAW"  | grep "357/080" > list_muon_357080
+
 Add at the beginning of step0.py:
 
     from filelist import *
@@ -9,7 +13,6 @@ and then change :
     input = cms.untracked.int32(-1)
 
     fileNames = cms.untracked.vstring(filelist),
-
 
 The list of files is in the file `list`. Since each file would require high computing and disk resources, we split the list to have one file processed per job. Run the split_one.sh macro to split this in subfiles of 1 file each:
 
