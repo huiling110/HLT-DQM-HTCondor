@@ -97,13 +97,15 @@ def main(options, paths):
     entries = int(chain.GetEntries())
     print('entries :',entries)
     entry = 0
-    for event in chain:
+    # for event in chain:
+    for entry in range(1000):
+        chain.GetEntry(entry) 
         # Progress bar
-        if(((entry+1)%(5*entries/100))==0):
-            printProgBar(100*entry/entries +1)
-        if (entry == entries-1):
-            printProgBar(100)
-        entry = entry + 1
+        # if(((entry+1)%(5*entries/100))==0):
+        #     printProgBar(100*entry/entries +1)
+        # if (entry == entries-1):
+        #     printProgBar(100)
+        # entry = entry + 1
 
         HT = 0 # Event HT using jet pT cut for b-jet HLT paths
         nb = 0 # Number of offline b-tagged jets using deepJet score
@@ -112,81 +114,81 @@ def main(options, paths):
         nj_ele = 0 # Using jet pT cut for electron HLT paths
         ne = 0 # Number of electrons
 
-        #if(event.run<360459):
+        #if(chain.run<360459):
         #    continue
 
-        if((event.HLT_IsoMu27==1) & (event.nJet>5)):
-            for jet in range(0,event.nJet):
-                # event HT
-                if((event.Jet_pt[jet] > 30.) & (abs(event.Jet_eta[jet])<2.4)): 
-                    HT = HT + event.Jet_pt[jet]
+        if((chain.HLT_IsoMu27==1) & (chain.nJet>5)):
+            for jet in range(0,chain.nJet):
+                # chain HT
+                if((chain.Jet_pt[jet] > 30.) & (abs(chain.Jet_eta[jet])<2.4)): 
+                    HT = HT + chain.Jet_pt[jet]
                 # nJets
-                if((event.Jet_pt[jet] > 40.) & (abs(event.Jet_eta[jet])<2.4) ):
+                if((chain.Jet_pt[jet] > 40.) & (abs(chain.Jet_eta[jet])<2.4) ):
                     nj = nj+1
                 # nBjets
-                if((event.Jet_pt[jet] > 40.) & (abs(event.Jet_eta[jet])<2.4) & (event.Jet_btagDeepFlavB[jet]>0.2770)):
+                if((chain.Jet_pt[jet] > 40.) & (abs(chain.Jet_eta[jet])<2.4) & (chain.Jet_btagDeepFlavB[jet]>0.2770)):
                     nb = nb+1
-                if((event.Jet_pt[jet] > 40.) & (abs(event.Jet_eta[jet])<2.4) & (event.Jet_btagDeepB[jet]>0.4941)):
-                    nb_csv = nb_csv+1
+                # if((chain.Jet_pt[jet] > 40.) & (abs(chain.Jet_eta[jet])<2.4) & (chain.Jet_btagDeepB[jet]>0.4941)):##!!!
+                    # nb_csv = nb_csv+1
 
             # b-jet paths   
-            if((nj > 5)  & (nb>1) & (HT>500) & (event.HLT_IsoMu27==1)):
-                h_den_deepJet.Fill(event.Jet_pt[0],1.)
+            if((nj > 5)  & (nb>1) & (HT>500) & (chain.HLT_IsoMu27==1)):
+                h_den_deepJet.Fill(chain.Jet_pt[0],1.)
 
                 # DeepJet with DeepJet tagger offline
-                if(event.HLT_PFHT450_SixPFJet36_PFBTagDeepJet_1p59==1):
-                    h_num_deepJet_Single.Fill(event.Jet_pt[0],1.)
-                if(event.HLT_PFHT400_SixPFJet32_DoublePFBTagDeepJet_2p94==1):
-                    h_num_deepJet_Double.Fill(event.Jet_pt[0],1.)
+                if(chain.HLT_PFHT450_SixPFJet36_PFBTagDeepJet_1p59==1):
+                    h_num_deepJet_Single.Fill(chain.Jet_pt[0],1.)
+                if(chain.HLT_PFHT400_SixPFJet32_DoublePFBTagDeepJet_2p94==1):
+                    h_num_deepJet_Double.Fill(chain.Jet_pt[0],1.)
 
                 # DeepCSV with DeepJet tagger offline 
-                if(event.HLT_PFHT450_SixPFJet36_PFBTagDeepCSV_1p59==1):
-                    h_num_deepCSV_HLT_Single.Fill(event.Jet_pt[0],1.)
-                if(event.HLT_PFHT400_SixPFJet32_DoublePFBTagDeepCSV_2p94==1):
-                    h_num_deepCSV_HLT_Double.Fill(event.Jet_pt[0],1.)
+                if(chain.HLT_PFHT450_SixPFJet36_PFBTagDeepCSV_1p59==1):
+                    h_num_deepCSV_HLT_Single.Fill(chain.Jet_pt[0],1.)
+                if(chain.HLT_PFHT400_SixPFJet32_DoublePFBTagDeepCSV_2p94==1):
+                    h_num_deepCSV_HLT_Double.Fill(chain.Jet_pt[0],1.)
 
                 # Plots according to BTV PAG
-                if(event.HLT_PFHT400_SixPFJet32>-1):
-                    maxBtag = max(event.Jet_btagDeepFlavB)
+                if(chain.HLT_PFHT400_SixPFJet32>-1):
+                    maxBtag = max(chain.Jet_btagDeepFlavB)
                     h_den_deepJet_csv.Fill(maxBtag,1.)
-                    if(event.HLT_PFHT450_SixPFJet36_PFBTagDeepCSV_1p59==1):
+                    if(chain.HLT_PFHT450_SixPFJet36_PFBTagDeepCSV_1p59==1):
                         h_num_deepCSV_HLT_Single_csv.Fill(maxBtag,1.)
-                    if(event.HLT_PFHT400_SixPFJet32_DoublePFBTagDeepCSV_2p94==1):
+                    if(chain.HLT_PFHT400_SixPFJet32_DoublePFBTagDeepCSV_2p94==1):
                         h_num_deepCSV_HLT_Double_csv.Fill(maxBtag,1.)
-                    if(event.HLT_PFHT450_SixPFJet36_PFBTagDeepJet_1p59==1):
+                    if(chain.HLT_PFHT450_SixPFJet36_PFBTagDeepJet_1p59==1):
                         h_num_deepJet_Single_csv.Fill(maxBtag,1.)
-                    if(event.HLT_PFHT400_SixPFJet32_DoublePFBTagDeepJet_2p94==1):
+                    if(chain.HLT_PFHT400_SixPFJet32_DoublePFBTagDeepJet_2p94==1):
                         h_num_deepJet_Double_csv.Fill(maxBtag,1.)
 
             # DeepJet with DeepCSV tagger offline 
-            if((nj > 5)  & (nb_csv>1) & (HT>500) & (event.HLT_IsoMu27==1)):
-                h_den_deepCSV.Fill(event.Jet_pt[0],1.)
-                if(event.HLT_PFHT450_SixPFJet36_PFBTagDeepJet_1p59==1):
-                    h_num_deepCSV_Single.Fill(event.Jet_pt[0],1.)
-                if(event.HLT_PFHT400_SixPFJet32_DoublePFBTagDeepJet_2p94==1):
-                    h_num_deepCSV_Double.Fill(event.Jet_pt[0],1.)
+            if((nj > 5)  & (nb_csv>1) & (HT>500) & (chain.HLT_IsoMu27==1)):
+                h_den_deepCSV.Fill(chain.Jet_pt[0],1.)
+                if(chain.HLT_PFHT450_SixPFJet36_PFBTagDeepJet_1p59==1):
+                    h_num_deepCSV_Single.Fill(chain.Jet_pt[0],1.)
+                if(chain.HLT_PFHT400_SixPFJet32_DoublePFBTagDeepJet_2p94==1):
+                    h_num_deepCSV_Double.Fill(chain.Jet_pt[0],1.)
               
 
-        if((event.nJet>0)):
-            for jet in range(0,event.nJet):
+        if((chain.nJet>0)):
+            for jet in range(0,chain.nJet):
                 # nJets ele paths
-                if((event.Jet_pt[jet] > 30.) & (abs(event.Jet_eta[jet])<2.4) ):
+                if((chain.Jet_pt[jet] > 30.) & (abs(chain.Jet_eta[jet])<2.4) ):
                     nj_ele = nj_ele+1     
-            for electron in range(0,event.nElectron):
+            for electron in range(0,chain.nElectron):
                 # nElectrons
-                if((event.Electron_pt[electron] > 25.) & (abs(event.Electron_eta[electron])<2.1) & (event.Electron_cutBased[electron]==4)):
+                if((chain.Electron_pt[electron] > 25.) & (abs(chain.Electron_eta[electron])<2.1) & (chain.Electron_cutBased[electron]==4)):
                     ne = ne+1
             # ele+jet path
             if((nj_ele > 0) & (ne>0)):
-                h_den_eleJet.Fill(event.Electron_pt[0],1.)
-                if(event.HLT_Ele30_eta2p1_WPTight_Gsf_CentralPFJet35_EleCleaned==1):
-                    h_num_eleJet.Fill(event.Electron_pt[0],1.)
+                h_den_eleJet.Fill(chain.Electron_pt[0],1.)
+                if(chain.HLT_Ele30_eta2p1_WPTight_Gsf_CentralPFJet35_EleCleaned==1):
+                    h_num_eleJet.Fill(chain.Electron_pt[0],1.)
 
             # ele+HT path
             if((nj_ele > 1) & (ne>0) & (HT>100.) ):
-                h_den_eleHT.Fill(event.Electron_pt[0],1.)
-                if(event.HLT_Ele28_eta2p1_WPTight_Gsf_HT150==1):
-                    h_num_eleHT.Fill(event.Electron_pt[0],1.)
+                h_den_eleHT.Fill(chain.Electron_pt[0],1.)
+                if(chain.HLT_Ele28_eta2p1_WPTight_Gsf_HT150==1):
+                    h_num_eleHT.Fill(chain.Electron_pt[0],1.)
 
     # Efficiency calculation
     eff_deepCSV_Single = r.TEfficiency(h_num_deepCSV_Single,h_den_deepCSV)
