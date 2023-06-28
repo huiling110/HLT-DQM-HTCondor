@@ -10,7 +10,7 @@
 # ls -ltr
 cd /afs/cern.ch/work/h/hhua/HLT_QDM/CMSSW_12_4_0_pre1/src/HLT-DQM-HTCondor/
 cmsenv
-lines=(`cat Muon0_2023C_v3_v1.txt`)
+lines=(`cat input/Muon0_2023C_v3_v1.txt`)
 echo ${lines[$1]}
-python3 topHLT-efficiency_nanoAOD.py -l root://cmsxrootd.fnal.gov/${lines[$1]}
+python3 efficiencyNanoAOD/topHLT-efficiency_nanoAOD.py -l root://cmsxrootd.fnal.gov/${lines[$1]}
 mv Efficiency_hists.root  Efficiency_hists_Muon_2023C_$1.root
