@@ -51,6 +51,8 @@ def printProgBar(percent):
 
 def main(options, paths):
 
+    isTest = True
+
     r.gStyle.SetOptStat(0)
     fill = options.Fill
     era = 2022
@@ -95,9 +97,9 @@ def main(options, paths):
     print("Adding file: ",options.List)
     chain.AddFile(options.List)
     entries = int(chain.GetEntries())
-    print('entries :',entries)
-    entry = 0
-    # for event in chain:
+    if isTest:
+        entries = 1000
+    print('entries: ', entries)
     for entry in range(1000):
         chain.GetEntry(entry) 
         # Progress bar
@@ -129,7 +131,8 @@ def main(options, paths):
                 if((chain.Jet_pt[jet] > 40.) & (abs(chain.Jet_eta[jet])<2.4) & (chain.Jet_btagDeepFlavB[jet]>0.2770)):
                     nb = nb+1
                 # if((chain.Jet_pt[jet] > 40.) & (abs(chain.Jet_eta[jet])<2.4) & (chain.Jet_btagDeepB[jet]>0.4941)):##!!!
-                    # nb_csv = nb_csv+1
+                if((chain.Jet_pt[jet] > 40.) & (abs(chain.Jet_eta[jet])<2.4) & (chain.Jet_btagPNetB[jet]>0.4941)):##!!!
+                    nb_csv = nb_csv+1
 
             # b-jet paths   
             if((nj > 5)  & (nb>1) & (HT>500) & (chain.HLT_IsoMu27==1)):
