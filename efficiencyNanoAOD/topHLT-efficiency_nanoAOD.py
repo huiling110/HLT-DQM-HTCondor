@@ -52,6 +52,7 @@ def printProgBar(percent):
 def main(options, paths):
 
     isTest = True
+    # isTest = False
 
     r.gStyle.SetOptStat(0)
     fill = options.Fill
@@ -96,18 +97,18 @@ def main(options, paths):
     chain = r.TChain("Events")
     print("Adding file: ",options.List)
     chain.AddFile(options.List)
+    chain.Print()
     entries = int(chain.GetEntries())
     if isTest:
         entries = 1000
     print('entries: ', entries)
     for entry in range(1000):
         chain.GetEntry(entry) 
-        # Progress bar
-        # if(((entry+1)%(5*entries/100))==0):
-        #     printProgBar(100*entry/entries +1)
-        # if (entry == entries-1):
-        #     printProgBar(100)
-        # entry = entry + 1
+        if(((entry+1)%(5*entries/100))==0):
+            printProgBar(100*entry/entries +1)
+        if (entry == entries-1):
+            printProgBar(100)
+        entry = entry + 1
 
         HT = 0 # Event HT using jet pT cut for b-jet HLT paths
         nb = 0 # Number of offline b-tagged jets using deepJet score
@@ -116,8 +117,11 @@ def main(options, paths):
         nj_ele = 0 # Using jet pT cut for electron HLT paths
         ne = 0 # Number of electrons
 
-        #if(chain.run<360459):
-        #    continue
+        if(chain.run<367661):
+           continue
+       
+        if(chain.nJet<=0):
+            continue
 
         if((chain.HLT_IsoMu27==1) & (chain.nJet>5)):
             for jet in range(0,chain.nJet):

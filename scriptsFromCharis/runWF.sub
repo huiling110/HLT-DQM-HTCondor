@@ -1,13 +1,13 @@
 arguments               = $(Process)
 executable              = runWF.sh
-output                  = runWF.out.$(Process)
-error                   = runWF.err.$(Process)
-log                     = runWF.log
+output                  = jobLog/runWF.out.$(Process)
+error                   = jobLog/runWF.err.$(Process)
+log                     = jobLog/runWF.log
 +JobFlavour             = "workday"
 #use_x509userproxy = true
-#x509userproxy = /afs/hep.wisc.edu/home/ckoraka/.x509up_10154
+#x509userproxy = /afs/hep.wisc.edu/home/ckraka/.x509up_10154
 #request_GPUs = 1
 should_transfer_files   = YES
 when_to_transfer_output = ON_EXIT
 #transfer_input_files    = topHLT-efficiency_nanoAOD.py,Muon2022_RunF.txt
-queue 40
+queue 193
